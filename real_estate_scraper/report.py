@@ -75,6 +75,12 @@ article.near{display:flex;gap:14px;background:var(--paper);border:1px dashed var
 article.near img{width:100px;height:76px;object-fit:cover;border-radius:8px;background:#ddd;flex:none}
 article.near h4{font-size:14px;margin:0 0 3px;font-family:"Work Sans",sans-serif;font-weight:600}
 article.near .reasons{color:var(--terracotta-light);font-size:12px}
+.shortlist-section{margin-top:48px}
+.shortlist-section h3{font-size:24px;color:var(--forest);margin:0 0 4px}
+.shortlist-section .hint{color:var(--ink-soft);font-size:13px;margin:0 0 16px}
+.manual-badge{position:absolute;top:10px;left:10px;background:var(--terracotta);color:#fff;font-family:"Fraunces",serif;
+  font-weight:700;font-size:13px;border-radius:999px;padding:5px 11px;box-shadow:0 4px 10px rgba(0,0,0,.25)}
+.notes{font-style:italic;color:var(--ink-soft)}
 .empty{text-align:center;padding:60px 20px;color:var(--ink-soft)}
 footer{text-align:center;color:var(--ink-soft);font-size:12px;margin-top:60px;padding-top:20px;border-top:1px solid var(--line)}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -127,6 +133,46 @@ def _near_card_html(x: Listing) -> str:
   <div><h4><a href="{escape(x.url)}" target="_blank" rel="noopener">{escape(x.title)}</a></h4>
   <p>USD {x.price:,.0f} · {escape(x.neighborhood)} · {escape(known)}</p>
   <p class="reasons">No cumple: {escape('; '.join(x.reasons))}</p></div></article>'''
+
+
+def _load_shortlist(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    try:
+        items = json.loads(path.read_text(encoding="utf-8"))
+        return items if isinstance(items, list) else []
+    except (OSError, ValueError):
+        return []
+
+
+def _shortlist_card_html(item: dict) -> str:
+    title = str(item.get("title") or "Publicación sin título")
+    url = str(item.get("url") or "#")
+    thumbnail = str(item.get("thumbnail") or "")
+    price = item.get("price")
+    currency = str(item.get("currency") or "USD")
+    price_html = f'<span class="price">{escape(currency)} {price:,.0f}</span>' if price is not None else ""
+    badges = []
+    if item.get("neighborhood"):
+        badges.append(f'<span class="badge">{escape(str(item["neighborhood"]))}</span>')
+    if item.get("rooms") is not None:
+        badges.append(f'<span class="badge">{item["rooms"]:g} amb</span>')
+    if item.get("total_m2") is not None:
+        badges.append(f'<span class="badge">{item["total_m2"]:g} m² total</span>')
+    if item.get("parking") is not None:
+        badges.append(f'<span class="badge">{item["parking"]:g} cochera(s)</span>')
+    notes = f'<p class="notes">{escape(str(item["notes"]))}</p>' if item.get("notes") else ""
+    return f'''<article class="card">
+  <div class="thumb"><img src="{escape(thumbnail)}" alt="" loading="lazy">
+    <span class="manual-badge">A mano</span>
+  </div>
+  <div class="body">
+    <h2><a href="{escape(url)}" target="_blank" rel="noopener">{escape(title)}</a></h2>
+    <div class="price-row">{price_html}</div>
+    <div class="badges">{''.join(badges)}</div>
+    {notes}
+  </div>
+</article>'''
 
 
 SCRIPT = '''
@@ -248,6 +294,9 @@ def write_reports(directory: Path, listings: list[Listing]) -> tuple[Path, Path,
     near.sort(key=lambda x: (x.total_m2 or 0, x.covered_m2 or 0), reverse=True)
     near_cards_html = "".join(_near_card_html(x) for x in near[:10])
 
+    shortlist_items = _load_shortlist(directory.parent / "shortlist.json")
+    shortlist_cards_html = "".join(_shortlist_card_html(item) for item in shortlist_items)
+
     next_run = (observed_at + timedelta(days=2)).strftime("%d/%m")
     observed_label = observed_at.strftime("%d/%m/%Y %H:%M")
 
@@ -313,6 +362,7 @@ def write_reports(directory: Path, listings: list[Listing]) -> tuple[Path, Path,
     <span class="count"><span id="visibleCount">{len(matches)}</span> mostrados</span>
   </div>
   {grid_section}
+  {f'<div class="shortlist-section"><h3>Vistos en Instagram y a mano</h3><p class="hint">Agregados manualmente con scripts/add_shortlist.py, no filtrados por los requisitos automáticos.</p><div class="grid">{shortlist_cards_html}</div></div>' if shortlist_cards_html else ''}
   {near_block}
   <footer>
     El HTML y los precios publicados por los vendedores pueden cambiar o tener errores.

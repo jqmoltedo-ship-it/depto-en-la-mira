@@ -4,6 +4,10 @@ set -eu
 project_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$project_dir"
 
+if [ -x .venv/bin/python3 ]; then
+    .venv/bin/python3 -m real_estate_scraper.browser_collect || echo "Aviso: recoleccion de navegador fallo, se continua solo con Mercado Libre" >&2
+fi
+
 python3 -m real_estate_scraper run
 
 cp data/report.html docs/index.html
