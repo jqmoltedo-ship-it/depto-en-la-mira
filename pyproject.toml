@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "real-estate-scraper"
+version = "0.1.0"
+description = "Buscador diario de oportunidades inmobiliarias"
+requires-python = ">=3.9"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["real_estate_scraper*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

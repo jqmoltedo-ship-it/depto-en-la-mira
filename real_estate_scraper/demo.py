@@ -1,0 +1,6 @@
+DEMO_ITEMS = [
+    {"id":"DEMO1","title":"Departamento 3 ambientes con cochera a refaccionar sobre Av. Cabildo","price":145000,"currency_id":"USD","permalink":"https://example.com/demo1","location":{"neighborhood":{"name":"Belgrano"},"address_line":"Av. Cabildo 1500"},"attributes":[{"id":"ROOMS","value_name":"3"},{"id":"BEDROOMS","value_name":"2"},{"id":"COVERED_AREA","value_name":"88 m²"},{"id":"TOTAL_AREA","value_name":"96 m²"},{"id":"PARKING_LOTS","value_name":"1"}]},
+    {"id":"DEMO2","title":"Departamento luminoso en Palermo","price":125000,"currency_id":"USD","permalink":"https://example.com/demo2","location":{"neighborhood":{"name":"Palermo"}},"attributes":[{"id":"ROOMS","value_name":"3"},{"id":"BEDROOMS","value_name":"2"},{"id":"COVERED_AREA","value_name":"82 m²"},{"id":"TOTAL_AREA","value_name":"92 m²"},{"id":"PARKING_LOTS","value_name":"1"}]},
+    {"id":"DEMO3","title":"Departamento en Barrancas de Belgrano con cochera","price":150000,"currency_id":"USD","permalink":"https://example.com/demo3","location":{"neighborhood":{"name":"Belgrano"}},"attributes":[{"id":"ROOMS","value_name":"4"},{"id":"BEDROOMS","value_name":"3"},{"id":"COVERED_AREA","value_name":"92 m²"},{"id":"TOTAL_AREA","value_name":"100 m²"},{"id":"PARKING_LOTS","value_name":"1"}]},
+]
+

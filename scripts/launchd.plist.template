@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>Label</key><string>com.local.departamentos</string>
+<key>ProgramArguments</key><array><string>/bin/sh</string><string>__PROJECT__/scripts/run_and_publish.sh</string></array>
+<key>WorkingDirectory</key><string>__PROJECT__</string>
+<key>EnvironmentVariables</key><dict><key>PATH</key><string>__PATH__</string></dict>
+<key>StartInterval</key><integer>__INTERVAL_SECONDS__</integer>
+<key>RunAtLoad</key><true/>
+<key>StandardOutPath</key><string>__PROJECT__/data/job.log</string>
+<key>StandardErrorPath</key><string>__PROJECT__/data/job-error.log</string>
+</dict></plist>

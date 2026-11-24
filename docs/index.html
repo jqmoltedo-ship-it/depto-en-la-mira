@@ -1,0 +1,1087 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Depto en la mira</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#faf4e8; --paper:#fffdf8; --ink:#231b12; --ink-soft:#5c5142;
+  --forest:#1f3d2f; --forest-light:#2e5745; --terracotta:#c15a34; --terracotta-light:#e08a5f;
+  --gold:#c99a3f; --line:#e7dcc6; --shadow:0 10px 30px -12px rgba(35,27,18,.25);
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font:400 16px/1.5 "Work Sans",sans-serif;
+  background-image:radial-gradient(circle at 10% 0%, rgba(201,154,63,.12), transparent 45%),
+    radial-gradient(circle at 90% 10%, rgba(193,90,52,.10), transparent 40%);}
+a{color:var(--forest)}
+h1,h2,h3{font-family:"Fraunces",serif;font-weight:600;margin:0}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px 80px}
+.hero{padding:48px 20px 28px;text-align:center}
+.hero .eyebrow{letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--terracotta);font-weight:600}
+.hero h1{font-size:clamp(34px,6vw,54px);margin:6px 0 10px;color:var(--forest)}
+.hero p.sub{color:var(--ink-soft);font-size:16px;margin:0 auto;max-width:520px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:22px 0 0}
+.chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--forest);font-weight:500}
+.stats{display:flex;gap:28px;justify-content:center;margin:30px 0 0;flex-wrap:wrap}
+.stat{text-align:center}
+.stat b{display:block;font-family:"Fraunces",serif;font-size:30px;color:var(--terracotta)}
+.stat span{font-size:12px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.08em}
+.controls{position:sticky;top:0;z-index:5;background:rgba(250,244,232,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);padding:14px 20px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:34px -20px 0}
+.controls select, .controls button{font:500 13px "Work Sans",sans-serif;padding:9px 14px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.controls button{cursor:pointer;transition:background .15s}
+.controls button.active{background:var(--forest);color:#fff;border-color:var(--forest)}
+.controls .count{margin-left:auto;font-size:13px;color:var(--ink-soft)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-top:24px}
+article.card{background:var(--paper);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;border:1px solid var(--line);position:relative;animation:rise .5s ease backwards}
+article.card .thumb{position:relative;aspect-ratio:4/3;background:#ddd2b8}
+article.card .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.score{position:absolute;top:10px;left:10px;background:var(--forest);color:#fff;font-family:"Fraunces",serif;
+  font-weight:700;font-size:15px;border-radius:999px;padding:5px 11px;box-shadow:0 4px 10px rgba(0,0,0,.25)}
+.score.mid{background:var(--gold)}
+.score.low{background:var(--terracotta)}
+.fav{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:none;
+  background:rgba(255,253,248,.9);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.fav.on{background:var(--terracotta);color:#fff}
+.body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.body h2{font-size:17px;line-height:1.3}
+.body h2 a{color:var(--ink);text-decoration:none}
+.body h2 a:hover{color:var(--terracotta)}
+.price-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.price{font-family:"Fraunces",serif;font-size:22px;font-weight:700;color:var(--terracotta)}
+.permsq{font-size:12px;color:var(--ink-soft)}
+.badges{display:flex;flex-wrap:wrap;gap:6px}
+.badge{background:var(--cream);border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-size:12px;color:var(--ink-soft)}
+.median{font-size:12px;color:var(--ink-soft);margin-top:auto}
+.sources{font-size:12px}
+.near-toggle{margin:40px 0 0;text-align:center}
+.near-toggle button{font:600 13px "Work Sans",sans-serif;background:none;border:1px solid var(--line);
+  border-radius:999px;padding:10px 20px;cursor:pointer;color:var(--forest)}
+.near-section{display:none;margin-top:18px}
+.near-section.open{display:block}
+.near-section h3{font-size:20px;color:var(--ink-soft);margin:0 0 4px}
+.near-section .hint{color:var(--ink-soft);font-size:13px;margin:0 0 16px}
+article.near{display:flex;gap:14px;background:var(--paper);border:1px dashed var(--line);border-radius:14px;
+  padding:12px;margin-bottom:10px;opacity:.85}
+article.near img{width:100px;height:76px;object-fit:cover;border-radius:8px;background:#ddd;flex:none}
+article.near h4{font-size:14px;margin:0 0 3px;font-family:"Work Sans",sans-serif;font-weight:600}
+article.near .reasons{color:var(--terracotta-light);font-size:12px}
+.empty{text-align:center;padding:60px 20px;color:var(--ink-soft)}
+footer{text-align:center;color:var(--ink-soft);font-size:12px;margin-top:60px;padding-top:20px;border-top:1px solid var(--line)}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="eyebrow">Capital Federal · actualizado cada 2 días</div>
+  <h1>Depto en la mira</h1>
+  <p class="sub">Búsqueda automática de 3+ ambientes, 80+ m² totales y cochera, hasta USD 200.000.</p>
+  <div class="chips">
+    <span class="chip">Hasta USD 200.000</span>
+    <span class="chip">3+ ambientes</span>
+    <span class="chip">80+ m² totales</span>
+    <span class="chip">1+ cochera</span>
+    <span class="chip">Palermo · Belgrano · Núñez · Recoleta y alrededores</span>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>66</b><span>Coincidencias</span></div>
+    <div class="stat"><b>204</b><span>Avisos analizados</span></div>
+    <div class="stat"><b>24/11/2026 10:30</b><span>Última corrida</span></div>
+    <div class="stat"><b>26/11</b><span>Próxima actualización</span></div>
+  </div>
+</div>
+<div class="wrap">
+  <div class="controls">
+    <select id="sortSelect">
+      <option value="score">Ordenar: puntaje</option>
+      <option value="price-asc">Precio: menor a mayor</option>
+      <option value="price-desc">Precio: mayor a menor</option>
+      <option value="m2-desc">Más m² totales</option>
+    </select>
+    <select id="barrioSelect">
+      <option value="">Todos los barrios</option>
+      <option value="Belgrano">Belgrano</option><option value="Colegiales">Colegiales</option><option value="Las Canitas">Las Canitas</option><option value="Nunez">Nunez</option><option value="Palermo">Palermo</option><option value="Palermo Hollywood">Palermo Hollywood</option><option value="Palermo Soho">Palermo Soho</option><option value="Recoleta">Recoleta</option><option value="Saavedra">Saavedra</option>
+    </select>
+    <button id="favToggle">&#9825; Solo favoritos</button>
+    <span class="count"><span id="visibleCount">66</span> mostrados</span>
+  </div>
+  <div id="grid" class="grid"><article class="card" data-key="PROP-45BD78B8EF7D4CC5" data-score="89.0" data-price="200000.0"
+  data-m2="132.0" data-barrio="Colegiales" style="animation-delay:0.00s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_731439-MLA122140601429_112026-E.webp" alt="" loading="lazy">
+    <span class="score ">89</span>
+    <button class="fav" data-fav-for="PROP-45BD78B8EF7D4CC5" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4229226246-colegiales-venta-nuda-prop-3-ambdepbalconcoch-_JM" target="_blank" rel="noopener">Colegiales: Venta Nuda Prop 3 Amb+dep+balcon+coch</a></h2>
+    <div class="price-row"><span class="price">USD 200,000</span><span class="permsq">1,515 USD/m²</span></div>
+    <div class="badges"><span class="badge">Colegiales</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">118 m² cub</span><span class="badge">132 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,378 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4229226246-colegiales-venta-nuda-prop-3-ambdepbalconcoch-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-5D480C038793670E" data-score="79.2" data-price="179900.0"
+  data-m2="113.0" data-barrio="Recoleta" style="animation-delay:0.05s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_953790-MLA117755100101_092026-E.webp" alt="" loading="lazy">
+    <span class="score ">79</span>
+    <button class="fav" data-fav-for="PROP-5D480C038793670E" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-3914947434-departamento-de-4-ambientes-con-2-patios-y-cochera-con-gran-potencial-para-remodelar-_JM" target="_blank" rel="noopener">Departamento De 4 Ambientes Con 2 Patios Y Cochera Con Gran Potencial Para Remodelar.</a></h2>
+    <div class="price-row"><span class="price">USD 179,900</span><span class="permsq">1,592 USD/m²</span></div>
+    <div class="badges"><span class="badge">Recoleta</span><span class="badge">4 amb</span><span class="badge">4 dorm</span><span class="badge">87 m² cub</span><span class="badge">113 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,096 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-3914947434-departamento-de-4-ambientes-con-2-patios-y-cochera-con-gran-potencial-para-remodelar-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-377FED2AB5FD46D9" data-score="78.5" data-price="180000.0"
+  data-m2="106.0" data-barrio="Belgrano" style="animation-delay:0.10s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_989610-MLA118376565709_092026-E.webp" alt="" loading="lazy">
+    <span class="score ">78</span>
+    <button class="fav" data-fav-for="PROP-377FED2AB5FD46D9" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4002342964-venta-belgrano-4-ambientes-a-reciclar-con-dep-y-cochera-_JM" target="_blank" rel="noopener">Venta Belgrano 4 Ambientes A Reciclar Con Dep Y Cochera</a></h2>
+    <div class="price-row"><span class="price">USD 180,000</span><span class="permsq">1,698 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">82 m² cub</span><span class="badge">106 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4002342964-venta-belgrano-4-ambientes-a-reciclar-con-dep-y-cochera-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-CB706C3834CEB733" data-score="75.0" data-price="179500.0"
+  data-m2="132.0" data-barrio="Palermo" style="animation-delay:0.15s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_790417-MLA120975402647_112026-E.webp" alt="" loading="lazy">
+    <span class="score ">75</span>
+    <button class="fav" data-fav-for="PROP-CB706C3834CEB733" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2268871701-departamento-de-4-ambientes-en-venta-en-palermo-_JM" target="_blank" rel="noopener">Departamento De 4 Ambientes En Venta En Palermo</a></h2>
+    <div class="price-row"><span class="price">USD 179,500</span><span class="permsq">1,360 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">112 m² cub</span><span class="badge">132 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2268871701-departamento-de-4-ambientes-en-venta-en-palermo-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-377FED2AB5FD46D9" data-score="73.4" data-price="195000.0"
+  data-m2="106.0" data-barrio="Belgrano" style="animation-delay:0.20s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_981048-MLA117470626285_092026-E.webp" alt="" loading="lazy">
+    <span class="score ">73</span>
+    <button class="fav" data-fav-for="PROP-377FED2AB5FD46D9" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2079295359-venta-belgrano-3-dorm-y-dep-a-refaccionar-con-coch-_JM" target="_blank" rel="noopener">Venta Belgrano 3 Dorm Y Dep A Refaccionar Con Coch</a></h2>
+    <div class="price-row"><span class="price">USD 195,000</span><span class="permsq">1,840 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">82 m² cub</span><span class="badge">106 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2079295359-venta-belgrano-3-dorm-y-dep-a-refaccionar-con-coch-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-D863BF69223182D4" data-score="73.3" data-price="199000.0"
+  data-m2="108.0" data-barrio="Belgrano" style="animation-delay:0.25s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_852864-MLA118749632264_102026-E.webp" alt="" loading="lazy">
+    <span class="score ">73</span>
+    <button class="fav" data-fav-for="PROP-D863BF69223182D4" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-3941852108-departamento-de-4-ambientes-con-dependencia-en-belgrano-_JM" target="_blank" rel="noopener">Departamento De 4 Ambientes Con Dependencia En Belgrano</a></h2>
+    <div class="price-row"><span class="price">USD 199,000</span><span class="permsq">1,843 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">93 m² cub</span><span class="badge">108 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-3941852108-departamento-de-4-ambientes-con-dependencia-en-belgrano-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-27011B9F446D18CA" data-score="71.7" data-price="140000.0"
+  data-m2="83.0" data-barrio="Palermo" style="animation-delay:0.30s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_807897-MLA115777762491_082026-E.webp" alt="" loading="lazy">
+    <span class="score ">72</span>
+    <button class="fav" data-fav-for="PROP-27011B9F446D18CA" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-1961118881-depto-3-amb-venta-a-metros-est-carranza-cochera-cub-_JM" target="_blank" rel="noopener">Depto 3 Amb Venta A Metros Est Carranza Cochera Cub</a></h2>
+    <div class="price-row"><span class="price">USD 140,000</span><span class="permsq">1,687 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">55 m² cub</span><span class="badge">83 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-1961118881-depto-3-amb-venta-a-metros-est-carranza-cochera-cub-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-7902524CE443FCB6" data-score="68.0" data-price="179000.0"
+  data-m2="108.0" data-barrio="Palermo Hollywood" style="animation-delay:0.35s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_974973-MLA117271110688_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">68</span>
+    <button class="fav" data-fav-for="PROP-7902524CE443FCB6" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2158152407-venta-duplex-4-ambientes-con-cochera-pisos-9-y-10-apto-credito-av-cordoba-6000-_JM" target="_blank" rel="noopener">Venta Dúplex 4 Ambientes Con Cochera - Pisos 9 Y 10 | Apto Crédito | Av. Córdoba 6000</a></h2>
+    <div class="price-row"><span class="price">USD 179,000</span><span class="permsq">1,657 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo Hollywood</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">85 m² cub</span><span class="badge">108 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,949 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2158152407-venta-duplex-4-ambientes-con-cochera-pisos-9-y-10-apto-credito-av-cordoba-6000-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-CE5D8B5BF65AFAE7" data-score="67.9" data-price="185000.0"
+  data-m2="98.0" data-barrio="Recoleta" style="animation-delay:0.40s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_951982-MLA122013578883_112026-E.webp" alt="" loading="lazy">
+    <span class="score mid">68</span>
+    <button class="fav" data-fav-for="PROP-CE5D8B5BF65AFAE7" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2307205879-departamento-en-departamento-en-recoleta-4-ambientes-dependencia-con-cocherarecoleta-_JM" target="_blank" rel="noopener">Departamento En Departamento En Recoleta 4 Ambientes + Dependencia Con Cocherarecoleta</a></h2>
+    <div class="price-row"><span class="price">USD 185,000</span><span class="permsq">1,888 USD/m²</span></div>
+    <div class="badges"><span class="badge">Recoleta</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">84 m² cub</span><span class="badge">98 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,096 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2307205879-departamento-en-departamento-en-recoleta-4-ambientes-dependencia-con-cocherarecoleta-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-F021904CAF614727" data-score="66.9" data-price="173000.0"
+  data-m2="97.0" data-barrio="Recoleta" style="animation-delay:0.45s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_905669-MLA121861308335_112026-E.webp" alt="" loading="lazy">
+    <span class="score mid">67</span>
+    <button class="fav" data-fav-for="PROP-F021904CAF614727" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2301563059-vta-dpto-4-amb-c-dep-recoleta-balcon-opc-coch-_JM" target="_blank" rel="noopener">Vta Dpto 4 Amb. C/ Dep. Recoleta Balcón Opc Coch</a></h2>
+    <div class="price-row"><span class="price">USD 173,000</span><span class="permsq">1,784 USD/m²</span></div>
+    <div class="badges"><span class="badge">Recoleta</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">88 m² cub</span><span class="badge">97 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,096 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2301563059-vta-dpto-4-amb-c-dep-recoleta-balcon-opc-coch-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-B0B604101E3835C8" data-score="66.7" data-price="137000.0"
+  data-m2="80.0" data-barrio="Palermo" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_797620-MLA117367594245_092026-E.webp" alt="" loading="lazy">
+    <span class="score mid">67</span>
+    <button class="fav" data-fav-for="PROP-B0B604101E3835C8" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2073262045-thames-y-loyola-i-3-amb-bcon-cparr-i-patio-y-coch-_JM" target="_blank" rel="noopener">Thames Y Loyola I 3 Amb Bcón C/parr I Patio Y Coch.</a></h2>
+    <div class="price-row"><span class="price">USD 137,000</span><span class="permsq">1,712 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">63 m² cub</span><span class="badge">80 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2073262045-thames-y-loyola-i-3-amb-bcon-cparr-i-patio-y-coch-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-780DED2524BC2892" data-score="66.0" data-price="199000.0"
+  data-m2="100.0" data-barrio="Nunez" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_980562-MLA120319085064_112026-E.webp" alt="" loading="lazy">
+    <span class="score mid">66</span>
+    <button class="fav" data-fav-for="PROP-780DED2524BC2892" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4226146378-oportunidad-venta-departamento-5-ambientes-muy-luminoso-cochera-cubierta-fija-_JM" target="_blank" rel="noopener">¡oportunidad! Venta Departamento 5 Ambientes | Muy Luminoso Cochera Cubierta Fija</a></h2>
+    <div class="price-row"><span class="price">USD 199,000</span><span class="permsq">1,990 USD/m²</span></div>
+    <div class="badges"><span class="badge">Nunez</span><span class="badge">5 amb</span><span class="badge">4 dorm</span><span class="badge">94 m² cub</span><span class="badge">100 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,151 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4226146378-oportunidad-venta-departamento-5-ambientes-muy-luminoso-cochera-cubierta-fija-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-C1D56EF5A4E1822F" data-score="65.8" data-price="199900.0"
+  data-m2="122.0" data-barrio="Saavedra" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_990520-MLA120565320723_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">66</span>
+    <button class="fav" data-fav-for="PROP-C1D56EF5A4E1822F" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2251253969-venta-dpto-3-amb-saavedra-con-terraza-y-cochera-_JM" target="_blank" rel="noopener">Venta Dpto 3 Amb Saavedra Con Terraza Y Cochera</a></h2>
+    <div class="price-row"><span class="price">USD 199,900</span><span class="permsq">1,639 USD/m²</span></div>
+    <div class="badges"><span class="badge">Saavedra</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">56 m² cub</span><span class="badge">122 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,895 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2251253969-venta-dpto-3-amb-saavedra-con-terraza-y-cochera-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-D6F86F4D1AD62670" data-score="65.7" data-price="195000.0"
+  data-m2="95.0" data-barrio="Belgrano" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_679663-MLA108512463456_032026-E.webp" alt="" loading="lazy">
+    <span class="score mid">66</span>
+    <button class="fav" data-fav-for="PROP-D6F86F4D1AD62670" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-1717428151-alquiler-o-venta-departamento-belgrano-_JM" target="_blank" rel="noopener">Alquiler O Venta Departamento - Belgrano</a></h2>
+    <div class="price-row"><span class="price">USD 195,000</span><span class="permsq">2,053 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">82 m² cub</span><span class="badge">95 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-1717428151-alquiler-o-venta-departamento-belgrano-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-336A1D7FF259206E" data-score="65.4" data-price="175000.0"
+  data-m2="95.0" data-barrio="Palermo" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_736422-MLA117754948887_092026-E.webp" alt="" loading="lazy">
+    <span class="score mid">65</span>
+    <button class="fav" data-fav-for="PROP-336A1D7FF259206E" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-3959289960-departamento-4-ambientes-luminoso-dependencias-lavadero-balcon-cochera-en-palermo-_JM" target="_blank" rel="noopener">Departamento 4 Ambientes Luminoso Dependencias Lavadero Balcon Cochera En Palermo</a></h2>
+    <div class="price-row"><span class="price">USD 175,000</span><span class="permsq">1,842 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">95 m² cub</span><span class="badge">95 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-3959289960-departamento-4-ambientes-luminoso-dependencias-lavadero-balcon-cochera-en-palermo-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-7F19C9EFB35F94BC" data-score="63.4" data-price="175000.0"
+  data-m2="85.0" data-barrio="Nunez" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_635643-MLA116396142870_092026-E.webp" alt="" loading="lazy">
+    <span class="score mid">63</span>
+    <button class="fav" data-fav-for="PROP-7F19C9EFB35F94BC" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2104953949-departamento-3-ambientes-venta-nunez-_JM" target="_blank" rel="noopener">Departamento 3 Ambientes Venta - Nuñez</a></h2>
+    <div class="price-row"><span class="price">USD 175,000</span><span class="permsq">2,059 USD/m²</span></div>
+    <div class="badges"><span class="badge">Nunez</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">65 m² cub</span><span class="badge">85 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,151 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2104953949-departamento-3-ambientes-venta-nunez-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-EA0EEA2354A0DA9F" data-score="63.1" data-price="171000.0"
+  data-m2="86.0" data-barrio="Colegiales" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_818307-MLA118907716797_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">63</span>
+    <button class="fav" data-fav-for="PROP-EA0EEA2354A0DA9F" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4039408616-venta-loft-con-cochera-y-terraza-privada-colegiales-_JM" target="_blank" rel="noopener">Venta Loft Con Cochera Y Terraza Privada Colegiales</a></h2>
+    <div class="price-row"><span class="price">USD 171,000</span><span class="permsq">1,988 USD/m²</span></div>
+    <div class="badges"><span class="badge">Colegiales</span><span class="badge">3 amb</span><span class="badge">1 dorm</span><span class="badge">51 m² cub</span><span class="badge">86 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,378 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4039408616-venta-loft-con-cochera-y-terraza-privada-colegiales-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-2798C213C513C958" data-score="61.4" data-price="175000.0"
+  data-m2="85.0" data-barrio="Recoleta" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_875085-MLA120309525335_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">61</span>
+    <button class="fav" data-fav-for="PROP-2798C213C513C958" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4132392086-amplio-departamento-frente-a-plaza-libertad-_JM" target="_blank" rel="noopener">Amplio Departamento Frente A Plaza Libertad</a></h2>
+    <div class="price-row"><span class="price">USD 175,000</span><span class="permsq">2,059 USD/m²</span></div>
+    <div class="badges"><span class="badge">Recoleta</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">85 m² cub</span><span class="badge">85 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,096 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4132392086-amplio-departamento-frente-a-plaza-libertad-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-C8DDE3FDE5436779" data-score="61.3" data-price="169000.0"
+  data-m2="82.0" data-barrio="Recoleta" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_831029-MLA118588607780_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">61</span>
+    <button class="fav" data-fav-for="PROP-C8DDE3FDE5436779" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4128842594-3-amb-ccochera-y-patio-_JM" target="_blank" rel="noopener">3 Amb C/cochera Y Patio</a></h2>
+    <div class="price-row"><span class="price">USD 169,000</span><span class="permsq">2,061 USD/m²</span></div>
+    <div class="badges"><span class="badge">Recoleta</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">60 m² cub</span><span class="badge">82 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,096 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4128842594-3-amb-ccochera-y-patio-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-C8DDE3FDE5436779" data-score="61.3" data-price="169000.0"
+  data-m2="82.0" data-barrio="Recoleta" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_847721-MLA120256352479_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">61</span>
+    <button class="fav" data-fav-for="PROP-C8DDE3FDE5436779" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4128842740-3-amb-ccochera-y-patio-_JM" target="_blank" rel="noopener">3 Amb C/cochera Y Patio</a></h2>
+    <div class="price-row"><span class="price">USD 169,000</span><span class="permsq">2,061 USD/m²</span></div>
+    <div class="badges"><span class="badge">Recoleta</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">60 m² cub</span><span class="badge">82 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,096 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4128842740-3-amb-ccochera-y-patio-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-ED4BBBC1CBE54438" data-score="61.1" data-price="195000.0"
+  data-m2="100.0" data-barrio="Palermo" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_975969-MLA116988045298_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">61</span>
+    <button class="fav" data-fav-for="PROP-ED4BBBC1CBE54438" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4017146976-departamento-4-ambientes-con-dependencia-y-cochera-fija-palermo-_JM" target="_blank" rel="noopener">Departamento 4 Ambientes Con Dependencia Y Cochera Fija!!! - Palermo</a></h2>
+    <div class="price-row"><span class="price">USD 195,000</span><span class="permsq">1,950 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">100 m² cub</span><span class="badge">100 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4017146976-departamento-4-ambientes-con-dependencia-y-cochera-fija-palermo-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-7873BC7B55DE91B3" data-score="61.0" data-price="159000.0"
+  data-m2="82.0" data-barrio="Recoleta" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_872592-MLA115713697338_092026-E.webp" alt="" loading="lazy">
+    <span class="score mid">61</span>
+    <button class="fav" data-fav-for="PROP-7873BC7B55DE91B3" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-3912116766-departamento-en-venta-larrea-al-700-4-ambientes-_JM" target="_blank" rel="noopener">Departamento En Venta Larrea Al 700 4 Ambientes</a></h2>
+    <div class="price-row"><span class="price">USD 159,000</span><span class="permsq">1,939 USD/m²</span></div>
+    <div class="badges"><span class="badge">Recoleta</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">75 m² cub</span><span class="badge">82 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,096 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-3912116766-departamento-en-venta-larrea-al-700-4-ambientes-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-F8805EE6A6141A00" data-score="61.0" data-price="199000.0"
+  data-m2="102.0" data-barrio="Palermo" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_915997-MLA121392156297_112026-E.webp" alt="" loading="lazy">
+    <span class="score mid">61</span>
+    <button class="fav" data-fav-for="PROP-F8805EE6A6141A00" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4192408320-venta-depto-4-ambdependencocherabaulera-palermo-_JM" target="_blank" rel="noopener">Venta Depto 4 Amb+dependen+cochera+baulera Palermo</a></h2>
+    <div class="price-row"><span class="price">USD 199,000</span><span class="permsq">1,951 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">94 m² cub</span><span class="badge">102 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4192408320-venta-depto-4-ambdependencocherabaulera-palermo-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-AFFB1D0AE1F0593A" data-score="60.7" data-price="195000.0"
+  data-m2="89.0" data-barrio="Belgrano" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_694070-MLA118749553817_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">61</span>
+    <button class="fav" data-fav-for="PROP-AFFB1D0AE1F0593A" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4028592654-venta-departamento-4-ambientes-belgrano-cochera-_JM" target="_blank" rel="noopener">Venta Departamento 4 Ambientes Belgrano Cochera</a></h2>
+    <div class="price-row"><span class="price">USD 195,000</span><span class="permsq">2,191 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">79 m² cub</span><span class="badge">89 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4028592654-venta-departamento-4-ambientes-belgrano-cochera-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-FF04ECA349984687" data-score="60.0" data-price="184900.0"
+  data-m2="115.0" data-barrio="Las Canitas" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_884278-MLA118978493095_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">60</span>
+    <button class="fav" data-fav-for="PROP-FF04ECA349984687" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2165213671-dpto-en-venta-con-patio-cochera-y-silencio-absoluto-en-el-corazon-de-las-canitas502102601-_JM" target="_blank" rel="noopener">Dpto En Venta Con Patio, Cochera Y Silencio Absoluto En El Corazón De Las Cañitas(502102601)</a></h2>
+    <div class="price-row"><span class="price">USD 184,900</span><span class="permsq">1,608 USD/m²</span></div>
+    <div class="badges"><span class="badge">Las Canitas</span><span class="badge">5 amb</span><span class="badge">4 dorm</span><span class="badge">99 m² cub</span><span class="badge">115 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,608 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2165213671-dpto-en-venta-con-patio-cochera-y-silencio-absoluto-en-el-corazon-de-las-canitas502102601-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-C77F9B66848EE190" data-score="59.0" data-price="170000.0"
+  data-m2="81.0" data-barrio="Belgrano" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_986741-MLA120975404013_112026-E.webp" alt="" loading="lazy">
+    <span class="score mid">59</span>
+    <button class="fav" data-fav-for="PROP-C77F9B66848EE190" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2268859113-departamento-de-4-ambientes-en-venta-en-belgrano-_JM" target="_blank" rel="noopener">Departamento De 4 Ambientes En Venta En Belgrano</a></h2>
+    <div class="price-row"><span class="price">USD 170,000</span><span class="permsq">2,099 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">74 m² cub</span><span class="badge">81 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2268859113-departamento-de-4-ambientes-en-venta-en-belgrano-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-AD1CCBDE30B58D27" data-score="59.0" data-price="170000.0"
+  data-m2="81.0" data-barrio="Belgrano" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_681104-MLA120975403641_112026-E.webp" alt="" loading="lazy">
+    <span class="score mid">59</span>
+    <button class="fav" data-fav-for="PROP-AD1CCBDE30B58D27" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2268859093-departamento-de-3-ambientes-en-venta-en-belgrano-_JM" target="_blank" rel="noopener">Departamento De 3 Ambientes En Venta En Belgrano</a></h2>
+    <div class="price-row"><span class="price">USD 170,000</span><span class="permsq">2,099 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">74 m² cub</span><span class="badge">81 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2268859093-departamento-de-3-ambientes-en-venta-en-belgrano-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-E02B3198E9AAAFD7" data-score="58.2" data-price="172000.0"
+  data-m2="94.5" data-barrio="Saavedra" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_644361-MLA113073029942_072026-E.webp" alt="" loading="lazy">
+    <span class="score mid">58</span>
+    <button class="fav" data-fav-for="PROP-E02B3198E9AAAFD7" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-1882854347-4-ambientes-con-cochera-balcon-cerrado-y-vista-abierta-_JM" target="_blank" rel="noopener">4 Ambientes Con Cochera, Balcón Cerrado Y Vista Abierta</a></h2>
+    <div class="price-row"><span class="price">USD 172,000</span><span class="permsq">1,820 USD/m²</span></div>
+    <div class="badges"><span class="badge">Saavedra</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">87 m² cub</span><span class="badge">94.5 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,895 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-1882854347-4-ambientes-con-cochera-balcon-cerrado-y-vista-abierta-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-3956E454A2603B96" data-score="58.1" data-price="168000.0"
+  data-m2="83.0" data-barrio="Palermo" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_885835-MLA118419897758_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">58</span>
+    <button class="fav" data-fav-for="PROP-3956E454A2603B96" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2229597633-venta-de-departamento-3-ambientes-con-cochera-en-palermo-_JM" target="_blank" rel="noopener">Venta De Departamento 3 Ambientes Con Cochera En Palermo</a></h2>
+    <div class="price-row"><span class="price">USD 168,000</span><span class="permsq">2,024 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">55 m² cub</span><span class="badge">83 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2229597633-venta-de-departamento-3-ambientes-con-cochera-en-palermo-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-C553137D75C02E5C" data-score="57.8" data-price="172000.0"
+  data-m2="94.0" data-barrio="Saavedra" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_971536-MLA119570326786_112026-E.webp" alt="" loading="lazy">
+    <span class="score mid">58</span>
+    <button class="fav" data-fav-for="PROP-C553137D75C02E5C" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4188133360-departamento-4-ambientes-con-cochera-_JM" target="_blank" rel="noopener">Departamento 4 Ambientes Con Cochera</a></h2>
+    <div class="price-row"><span class="price">USD 172,000</span><span class="permsq">1,830 USD/m²</span></div>
+    <div class="badges"><span class="badge">Saavedra</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">94 m² cub</span><span class="badge">94 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,895 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4188133360-departamento-4-ambientes-con-cochera-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-48D2E13D560052F0" data-score="57.4" data-price="180000.0"
+  data-m2="84.0" data-barrio="Belgrano" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_678981-MLA116129327684_092026-E.webp" alt="" loading="lazy">
+    <span class="score mid">57</span>
+    <button class="fav" data-fav-for="PROP-48D2E13D560052F0" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-3917342942-departamento-3-ambientes-con-cochera-en-belgrano-_JM" target="_blank" rel="noopener">Departamento 3 Ambientes Con Cochera En Belgrano</a></h2>
+    <div class="price-row"><span class="price">USD 180,000</span><span class="permsq">2,143 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">73 m² cub</span><span class="badge">84 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-3917342942-departamento-3-ambientes-con-cochera-en-belgrano-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-41B59555AEF18995" data-score="57.0" data-price="199900.0"
+  data-m2="81.0" data-barrio="Colegiales" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_921150-MLA108314064638_032026-E.webp" alt="" loading="lazy">
+    <span class="score mid">57</span>
+    <button class="fav" data-fav-for="PROP-41B59555AEF18995" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-1713060193-departamento-4-ambientes-cochera-balcon-belgrano-_JM" target="_blank" rel="noopener">Departamento 4 Ambientes Cochera Balcón Belgrano</a></h2>
+    <div class="price-row"><span class="price">USD 199,900</span><span class="permsq">2,468 USD/m²</span></div>
+    <div class="badges"><span class="badge">Colegiales</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">74 m² cub</span><span class="badge">81 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,378 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-1713060193-departamento-4-ambientes-cochera-balcon-belgrano-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-1A8FE94ED3D76AA3" data-score="56.8" data-price="199000.0"
+  data-m2="101.0" data-barrio="Saavedra" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_789532-MLA119778830875_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">57</span>
+    <button class="fav" data-fav-for="PROP-1A8FE94ED3D76AA3" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2211859469-san-isidro-labrador-4000-venta-departamento-4-ambientes-dependencia-balcon-_JM" target="_blank" rel="noopener">San Isidro Labrador 4000 Venta Departamento 4 Ambientes Dependencia Balcón</a></h2>
+    <div class="price-row"><span class="price">USD 199,000</span><span class="permsq">1,970 USD/m²</span></div>
+    <div class="badges"><span class="badge">Saavedra</span><span class="badge">4 amb</span><span class="badge">4 dorm</span><span class="badge">96 m² cub</span><span class="badge">101 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,895 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2211859469-san-isidro-labrador-4000-venta-departamento-4-ambientes-dependencia-balcon-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-2AD3853A454F95A9" data-score="56.6" data-price="179500.0"
+  data-m2="80.0" data-barrio="Nunez" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_992742-MLA118805496598_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">57</span>
+    <button class="fav" data-fav-for="PROP-2AD3853A454F95A9" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2248874389-excelente-departamento-de-3-ambientes-con-balcon-frances-y-cochera-cubierta-en-venta-_JM" target="_blank" rel="noopener">Excelente Departamento De 3 Ambientes Con Balcon Frances Y Cochera Cubierta En Venta</a></h2>
+    <div class="price-row"><span class="price">USD 179,500</span><span class="permsq">2,244 USD/m²</span></div>
+    <div class="badges"><span class="badge">Nunez</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">76 m² cub</span><span class="badge">80 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,151 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2248874389-excelente-departamento-de-3-ambientes-con-balcon-frances-y-cochera-cubierta-en-venta-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-8CAE0690F0704A34" data-score="56.3" data-price="185000.0"
+  data-m2="80.0" data-barrio="Belgrano" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_704916-MLA115524638492_082026-E.webp" alt="" loading="lazy">
+    <span class="score mid">56</span>
+    <button class="fav" data-fav-for="PROP-8CAE0690F0704A34" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-3247269722-departamento-3-ambientes-luminoso-frente-dependencias-con-cochera-espacio-y-balcon-en-belgrano-_JM" target="_blank" rel="noopener">Departamento 3 Ambientes Luminoso Frente Dependencias Con Cochera Espacio Y Balcon En Belgrano</a></h2>
+    <div class="price-row"><span class="price">USD 185,000</span><span class="permsq">2,312 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">80 m² cub</span><span class="badge">80 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-3247269722-departamento-3-ambientes-luminoso-frente-dependencias-con-cochera-espacio-y-balcon-en-belgrano-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-DCA2DA836EE9C00E" data-score="56.0" data-price="160000.0"
+  data-m2="82.0" data-barrio="Palermo" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_934939-MLA108036615918_032026-E.webp" alt="" loading="lazy">
+    <span class="score mid">56</span>
+    <button class="fav" data-fav-for="PROP-DCA2DA836EE9C00E" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-3059573784-venta-loft-deposito-palermo-cochera-_JM" target="_blank" rel="noopener">Venta - Loft - Deposito - Palermo - Cochera</a></h2>
+    <div class="price-row"><span class="price">USD 160,000</span><span class="permsq">1,951 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">82 m² cub</span><span class="badge">82 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-3059573784-venta-loft-deposito-palermo-cochera-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-904840F8A79C5E22" data-score="55.8" data-price="195000.0"
+  data-m2="104.0" data-barrio="Saavedra" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_750538-MLA121461909767_112026-E.webp" alt="" loading="lazy">
+    <span class="score mid">56</span>
+    <button class="fav" data-fav-for="PROP-904840F8A79C5E22" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4195319756-venta-4-amb-escritorio-c-cochera-saavedra-_JM" target="_blank" rel="noopener">Venta 4 Amb + Escritorio C/ Cochera. Saavedra</a></h2>
+    <div class="price-row"><span class="price">USD 195,000</span><span class="permsq">1,875 USD/m²</span></div>
+    <div class="badges"><span class="badge">Saavedra</span><span class="badge">4 amb</span><span class="badge">4 dorm</span><span class="badge">92 m² cub</span><span class="badge">104 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,895 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4195319756-venta-4-amb-escritorio-c-cochera-saavedra-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-D7611EB3D39675EC" data-score="55.0" data-price="170000.0"
+  data-m2="86.0" data-barrio="Palermo" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_960089-MLA112504239222_062026-E.webp" alt="" loading="lazy">
+    <span class="score mid">55</span>
+    <button class="fav" data-fav-for="PROP-D7611EB3D39675EC" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-1852397359-departamento-4-amb-con-cochera-av-cordoba-6000-_JM" target="_blank" rel="noopener">Departamento 4 Amb. Con Cochera Av. Córdoba 6000</a></h2>
+    <div class="price-row"><span class="price">USD 170,000</span><span class="permsq">1,977 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">4 amb</span><span class="badge">4 dorm</span><span class="badge">78 m² cub</span><span class="badge">86 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-1852397359-departamento-4-amb-con-cochera-av-cordoba-6000-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-54A92CA85B7364CB" data-score="55.0" data-price="195000.0"
+  data-m2="82.0" data-barrio="Colegiales" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_783895-MLA120963661643_112026-E.webp" alt="" loading="lazy">
+    <span class="score mid">55</span>
+    <button class="fav" data-fav-for="PROP-54A92CA85B7364CB" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4170769852-venta-4-amb-en-colegiales-ccochera-excelente-estado-piso-alto-muy-luminoso-_JM" target="_blank" rel="noopener">Venta 4 Amb. En Colegiales C/cochera - Excelente Estado - Piso Alto - Muy Luminoso</a></h2>
+    <div class="price-row"><span class="price">USD 195,000</span><span class="permsq">2,378 USD/m²</span></div>
+    <div class="badges"><span class="badge">Colegiales</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">82 m² cub</span><span class="badge">82 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,378 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4170769852-venta-4-amb-en-colegiales-ccochera-excelente-estado-piso-alto-muy-luminoso-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-2CE175E9A2FBC80F" data-score="55.0" data-price="190000.0"
+  data-m2="82.0" data-barrio="Palermo Soho" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_624547-MLA118683021226_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">55</span>
+    <button class="fav" data-fav-for="PROP-2CE175E9A2FBC80F" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2242714815-departamento-en-venta-3-ambientes--_JM" target="_blank" rel="noopener">Departamento En Venta! 3 Ambientes !!</a></h2>
+    <div class="price-row"><span class="price">USD 190,000</span><span class="permsq">2,317 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo Soho</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">82 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,317 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2242714815-departamento-en-venta-3-ambientes--_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-4E9D6EB527EA07E7" data-score="54.7" data-price="190000.0"
+  data-m2="85.0" data-barrio="Recoleta" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_995006-MLA117003729114_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">55</span>
+    <button class="fav" data-fav-for="PROP-4E9D6EB527EA07E7" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2144157799-3-ambientes-con-dependencia-cochera-y-baulera-recoleta-contrafrente-luminoso-y-muy-silencioso-_JM" target="_blank" rel="noopener">3 Ambientes Con Dependencia, Cochera Y Baulera | Recoleta | Contrafrente Luminoso Y Muy Silencioso</a></h2>
+    <div class="price-row"><span class="price">USD 190,000</span><span class="permsq">2,235 USD/m²</span></div>
+    <div class="badges"><span class="badge">Recoleta</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">81 m² cub</span><span class="badge">85 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,096 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2144157799-3-ambientes-con-dependencia-cochera-y-baulera-recoleta-contrafrente-luminoso-y-muy-silencioso-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-4AA62A1A1E64906E" data-score="54.3" data-price="185000.0"
+  data-m2="83.0" data-barrio="Belgrano" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_844406-MLA118708444584_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">54</span>
+    <button class="fav" data-fav-for="PROP-4AA62A1A1E64906E" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4137040864-venta-depto-piso-alto-con-cochera-belgrano-_JM" target="_blank" rel="noopener">Venta Depto Piso Alto Con Cochera Belgrano</a></h2>
+    <div class="price-row"><span class="price">USD 185,000</span><span class="permsq">2,229 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">83 m² cub</span><span class="badge">83 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4137040864-venta-depto-piso-alto-con-cochera-belgrano-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-78BC25F30E1BE333" data-score="54.2" data-price="180000.0"
+  data-m2="94.0" data-barrio="Saavedra" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_868856-MLA120281837798_112026-E.webp" alt="" loading="lazy">
+    <span class="score mid">54</span>
+    <button class="fav" data-fav-for="PROP-78BC25F30E1BE333" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4224232484-venta-departamento-3-ambientes-en-saavedra-_JM" target="_blank" rel="noopener">Venta Departamento 3 Ambientes En Saavedra</a></h2>
+    <div class="price-row"><span class="price">USD 180,000</span><span class="permsq">1,915 USD/m²</span></div>
+    <div class="badges"><span class="badge">Saavedra</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">85 m² cub</span><span class="badge">94 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,895 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4224232484-venta-departamento-3-ambientes-en-saavedra-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-2538E5086FF29553" data-score="54.1" data-price="190000.0"
+  data-m2="85.0" data-barrio="Belgrano" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_720752-MLA118098058362_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">54</span>
+    <button class="fav" data-fav-for="PROP-2538E5086FF29553" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2209152175-venta-departamento-3-ambientes-escritorio-en-belgrano-con-balcon-_JM" target="_blank" rel="noopener">Venta Departamento 3 Ambientes + Escritorio En Belgrano, Con Balcón</a></h2>
+    <div class="price-row"><span class="price">USD 190,000</span><span class="permsq">2,235 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">80 m² cub</span><span class="badge">85 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2209152175-venta-departamento-3-ambientes-escritorio-en-belgrano-con-balcon-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-C52C4A64E948C3FB" data-score="53.9" data-price="200000.0"
+  data-m2="83.0" data-barrio="Colegiales" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_860276-MLA112910412334_072026-E.webp" alt="" loading="lazy">
+    <span class="score mid">54</span>
+    <button class="fav" data-fav-for="PROP-C52C4A64E948C3FB" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-1873555183-departamento-en-colegiales-_JM" target="_blank" rel="noopener">Departamento En Colegiales</a></h2>
+    <div class="price-row"><span class="price">USD 200,000</span><span class="permsq">2,410 USD/m²</span></div>
+    <div class="badges"><span class="badge">Colegiales</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">76 m² cub</span><span class="badge">83 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,378 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-1873555183-departamento-en-colegiales-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-39807E17C5FC8323" data-score="53.7" data-price="179000.0"
+  data-m2="84.0" data-barrio="Recoleta" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_831743-MLA114595783971_072026-E.webp" alt="" loading="lazy">
+    <span class="score mid">54</span>
+    <button class="fav" data-fav-for="PROP-39807E17C5FC8323" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-1751863831-departamento-en-recoleta-_JM" target="_blank" rel="noopener">Departamento En Recoleta</a></h2>
+    <div class="price-row"><span class="price">USD 179,000</span><span class="permsq">2,131 USD/m²</span></div>
+    <div class="badges"><span class="badge">Recoleta</span><span class="badge">3 amb</span><span class="badge">0 dorm</span><span class="badge">84 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,096 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-1751863831-departamento-en-recoleta-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-FF883FB4BA7606AC" data-score="53.3" data-price="199900.0"
+  data-m2="99.0" data-barrio="Palermo" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_699344-MLA119481017489_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">53</span>
+    <button class="fav" data-fav-for="PROP-FF883FB4BA7606AC" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4081268854-venta-departamento-4-amb-palermo-_JM" target="_blank" rel="noopener">Venta Departamento 4 Amb Palermo</a></h2>
+    <div class="price-row"><span class="price">USD 199,900</span><span class="permsq">2,019 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">4 amb</span><span class="badge">2 dorm</span><span class="badge">89 m² cub</span><span class="badge">99 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4081268854-venta-departamento-4-amb-palermo-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-F832C77A3F349A17" data-score="53.0" data-price="200000.0"
+  data-m2="87.72" data-barrio="Recoleta" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_885053-MLA120534715587_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">53</span>
+    <button class="fav" data-fav-for="PROP-F832C77A3F349A17" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4145173464-venta-departamento-de-4-ambientes-con-balcon-cochera-y-baulera-apto-credito-recoleta-_JM" target="_blank" rel="noopener">Venta Departamento De 4 Ambientes Con Balcon, Cochera Y Baulera Apto Credito Recoleta</a></h2>
+    <div class="price-row"><span class="price">USD 200,000</span><span class="permsq">2,280 USD/m²</span></div>
+    <div class="badges"><span class="badge">Recoleta</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">77.56 m² cub</span><span class="badge">87.72 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,096 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4145173464-venta-departamento-de-4-ambientes-con-balcon-cochera-y-baulera-apto-credito-recoleta-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-A06931F8B2E8A1E6" data-score="52.8" data-price="200000.0"
+  data-m2="83.0" data-barrio="Belgrano" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_844020-MLA97110338466_112025-E.webp" alt="" loading="lazy">
+    <span class="score mid">53</span>
+    <button class="fav" data-fav-for="PROP-A06931F8B2E8A1E6" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-1948792759-mendoza-2900-_JM" target="_blank" rel="noopener">Mendoza 2900</a></h2>
+    <div class="price-row"><span class="price">USD 200,000</span><span class="permsq">2,410 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">73 m² cub</span><span class="badge">83 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-1948792759-mendoza-2900-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-A52840AD2F8D6A70" data-score="52.0" data-price="195900.0"
+  data-m2="85.0" data-barrio="Recoleta" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_685146-MLA117007271900_102026-E.webp" alt="" loading="lazy">
+    <span class="score mid">52</span>
+    <button class="fav" data-fav-for="PROP-A52840AD2F8D6A70" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2144239133-departamento-3-ambientes-mas-dependencia-de-servicio-con-cochera-_JM" target="_blank" rel="noopener">Departamento 3 Ambientes Mas Dependencia De Servicio Con Cochera</a></h2>
+    <div class="price-row"><span class="price">USD 195,900</span><span class="permsq">2,305 USD/m²</span></div>
+    <div class="badges"><span class="badge">Recoleta</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">77 m² cub</span><span class="badge">85 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,096 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2144239133-departamento-3-ambientes-mas-dependencia-de-servicio-con-cochera-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-2F324BC9951665AA" data-score="50.7" data-price="199900.0"
+  data-m2="81.0" data-barrio="Belgrano" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_680739-MLA107831368022_032026-E.webp" alt="" loading="lazy">
+    <span class="score mid">51</span>
+    <button class="fav" data-fav-for="PROP-2F324BC9951665AA" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-1699588497-departamento-4-ambientes-cochera-balcon-belgrano-_JM" target="_blank" rel="noopener">Departamento 4 Ambientes Cochera Balcón Belgrano</a></h2>
+    <div class="price-row"><span class="price">USD 199,900</span><span class="permsq">2,468 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">74 m² cub</span><span class="badge">81 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-1699588497-departamento-4-ambientes-cochera-balcon-belgrano-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-4C4DBEA79F4BF624" data-score="50.0" data-price="179900.0"
+  data-m2="80.75" data-barrio="Recoleta" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_653011-MLA121848271255_112026-E.webp" alt="" loading="lazy">
+    <span class="score mid">50</span>
+    <button class="fav" data-fav-for="PROP-4C4DBEA79F4BF624" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4214445464-venta-departamento-4-ambientes-cochera-recoleta-paraguay-2300-apto-credito-_JM" target="_blank" rel="noopener">Venta Departamento 4 Ambientes Cochera Recoleta Paraguay 2300 Apto Credito</a></h2>
+    <div class="price-row"><span class="price">USD 179,900</span><span class="permsq">2,228 USD/m²</span></div>
+    <div class="badges"><span class="badge">Recoleta</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">74 m² cub</span><span class="badge">80.75 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,096 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4214445464-venta-departamento-4-ambientes-cochera-recoleta-paraguay-2300-apto-credito-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-D1FFDDC0E3BFCC95" data-score="49.3" data-price="200000.0"
+  data-m2="82.0" data-barrio="Nunez" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_964890-MLA120659004155_112026-E.webp" alt="" loading="lazy">
+    <span class="score low">49</span>
+    <button class="fav" data-fav-for="PROP-D1FFDDC0E3BFCC95" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2243415397-venta-departamento-4-ambientes-con-cochera-descubierta-en-nunez-_JM" target="_blank" rel="noopener">Venta Departamento 4 Ambientes Con Cochera Descubierta En Nuñez</a></h2>
+    <div class="price-row"><span class="price">USD 200,000</span><span class="permsq">2,439 USD/m²</span></div>
+    <div class="badges"><span class="badge">Nunez</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">77 m² cub</span><span class="badge">82 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,151 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2243415397-venta-departamento-4-ambientes-con-cochera-descubierta-en-nunez-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-B9AD8BDDB5888F38" data-score="49.1" data-price="180000.0"
+  data-m2="80.0" data-barrio="Recoleta" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_647469-MLA120835800381_112026-E.webp" alt="" loading="lazy">
+    <span class="score low">49</span>
+    <button class="fav" data-fav-for="PROP-B9AD8BDDB5888F38" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4162343358-venta-depto-3-amb-en-recoleta-con-balcon-y-cochera-_JM" target="_blank" rel="noopener">Venta Depto 3 Amb En Recoleta Con Balcon Y Cochera</a></h2>
+    <div class="price-row"><span class="price">USD 180,000</span><span class="permsq">2,250 USD/m²</span></div>
+    <div class="badges"><span class="badge">Recoleta</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">76 m² cub</span><span class="badge">80 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,096 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4162343358-venta-depto-3-amb-en-recoleta-con-balcon-y-cochera-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-DCF4F46794D7E73A" data-score="49.0" data-price="190000.0"
+  data-m2="80.0" data-barrio="Belgrano" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_901576-MLA120030910994_112026-E.webp" alt="" loading="lazy">
+    <span class="score low">49</span>
+    <button class="fav" data-fav-for="PROP-DCF4F46794D7E73A" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4210482198-venta-3-ambientes-cochera-belgrano-_JM" target="_blank" rel="noopener">Venta | 3 Ambientes | Cochera | Belgrano</a></h2>
+    <div class="price-row"><span class="price">USD 190,000</span><span class="permsq">2,375 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">77 m² cub</span><span class="badge">80 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4210482198-venta-3-ambientes-cochera-belgrano-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-58E511B3F0D4F997" data-score="48.8" data-price="179000.0"
+  data-m2="84.0" data-barrio="Palermo" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_647311-MLA121674763111_112026-E.webp" alt="" loading="lazy">
+    <span class="score low">49</span>
+    <button class="fav" data-fav-for="PROP-58E511B3F0D4F997" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4151647056-departamento-en-venta-en-la-calle-billinghurst-palermo-capital-federal-buenos-aires-_JM" target="_blank" rel="noopener">Departamento En Venta En La Calle Billinghurst, Palermo, Capital Federal, Buenos Aires</a></h2>
+    <div class="price-row"><span class="price">USD 179,000</span><span class="permsq">2,131 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">84 m² cub</span><span class="badge">84 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4151647056-departamento-en-venta-en-la-calle-billinghurst-palermo-capital-federal-buenos-aires-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-86450E53D2441C23" data-score="48.6" data-price="198000.0"
+  data-m2="83.0" data-barrio="Belgrano" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_705297-MLA120264684094_112026-E.webp" alt="" loading="lazy">
+    <span class="score low">49</span>
+    <button class="fav" data-fav-for="PROP-86450E53D2441C23" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4223628402-departamento-3-ambientes-cdependencia-baulera-y-cochera-techada-movible-en-belgrano-_JM" target="_blank" rel="noopener">Departamento 3 Ambientes C/dependencia, Baulera Y Cochera Techada Movible En Belgrano</a></h2>
+    <div class="price-row"><span class="price">USD 198,000</span><span class="permsq">2,386 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">77 m² cub</span><span class="badge">83 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4223628402-departamento-3-ambientes-cdependencia-baulera-y-cochera-techada-movible-en-belgrano-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-60DA8A9C1E3C88C0" data-score="48.0" data-price="195000.0"
+  data-m2="87.0" data-barrio="Palermo Hollywood" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_792119-MLA115214269254_082026-E.webp" alt="" loading="lazy">
+    <span class="score low">48</span>
+    <button class="fav" data-fav-for="PROP-60DA8A9C1E3C88C0" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2029103661-departamento-en-venta-4-ambc-cochera-en-palermo-hollywood-_JM" target="_blank" rel="noopener">Departamento En Venta 4 Amb.c/ Cochera En Palermo Hollywood</a></h2>
+    <div class="price-row"><span class="price">USD 195,000</span><span class="permsq">2,241 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo Hollywood</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">76 m² cub</span><span class="badge">87 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,949 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2029103661-departamento-en-venta-4-ambc-cochera-en-palermo-hollywood-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-1916D3592CF8FC91" data-score="47.2" data-price="185000.0"
+  data-m2="89.0" data-barrio="Saavedra" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_658656-MLA119754374766_112026-E.webp" alt="" loading="lazy">
+    <span class="score low">47</span>
+    <button class="fav" data-fav-for="PROP-1916D3592CF8FC91" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2287687327-venta-departamento-4-ambientes-piso-7-en-saavedra-_JM" target="_blank" rel="noopener">Venta Departamento 4 Ambientes - Piso 7 En Saavedra</a></h2>
+    <div class="price-row"><span class="price">USD 185,000</span><span class="permsq">2,079 USD/m²</span></div>
+    <div class="badges"><span class="badge">Saavedra</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">77 m² cub</span><span class="badge">89 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,895 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2287687327-venta-departamento-4-ambientes-piso-7-en-saavedra-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-CCDD9D2319229A93" data-score="46.8" data-price="198000.0"
+  data-m2="86.0" data-barrio="Palermo" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_703999-MLA119241969388_112026-E.webp" alt="" loading="lazy">
+    <span class="score low">47</span>
+    <button class="fav" data-fav-for="PROP-CCDD9D2319229A93" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2267848233-depto-4-amb-frente-con-balcon-y-cochera-palermo-_JM" target="_blank" rel="noopener">Depto 4 Amb Frente Con Balcón Y Cochera - Palermo</a></h2>
+    <div class="price-row"><span class="price">USD 198,000</span><span class="permsq">2,302 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">4 amb</span><span class="badge">3 dorm</span><span class="badge">73 m² cub</span><span class="badge">86 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2267848233-depto-4-amb-frente-con-balcon-y-cochera-palermo-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-EDCCE24ED64F1385" data-score="46.1" data-price="199000.0"
+  data-m2="81.0" data-barrio="Belgrano" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_960871-MLA121675240545_112026-E.webp" alt="" loading="lazy">
+    <span class="score low">46</span>
+    <button class="fav" data-fav-for="PROP-EDCCE24ED64F1385" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2294651067-departamento-3-ambientes-en-venta-con-cochera-en-belgrano-_JM" target="_blank" rel="noopener">Departamento 3 Ambientes En Venta - Con Cochera En Belgrano.</a></h2>
+    <div class="price-row"><span class="price">USD 199,000</span><span class="permsq">2,457 USD/m²</span></div>
+    <div class="badges"><span class="badge">Belgrano</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">74 m² cub</span><span class="badge">81 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,210 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2294651067-departamento-3-ambientes-en-venta-con-cochera-en-belgrano-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-E724F25B1394653E" data-score="45.2" data-price="192000.0"
+  data-m2="82.0" data-barrio="Palermo" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_755651-MLA120117052794_112026-E.webp" alt="" loading="lazy">
+    <span class="score low">45</span>
+    <button class="fav" data-fav-for="PROP-E724F25B1394653E" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2302052661-venta-departamento-3-ambientes-palermo-_JM" target="_blank" rel="noopener">Venta / Departamento / 3 Ambientes / Palermo</a></h2>
+    <div class="price-row"><span class="price">USD 192,000</span><span class="permsq">2,341 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">74 m² cub</span><span class="badge">82 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2302052661-venta-departamento-3-ambientes-palermo-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-E724F25B1394653E" data-score="45.2" data-price="192000.0"
+  data-m2="82.0" data-barrio="Palermo" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_705064-MLA107476248067_022026-E.webp" alt="" loading="lazy">
+    <span class="score low">45</span>
+    <button class="fav" data-fav-for="PROP-E724F25B1394653E" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2897168862-venta-departamento-3-ambientes-palermo-_JM" target="_blank" rel="noopener">Venta / Departamento / 3 Ambientes / Palermo</a></h2>
+    <div class="price-row"><span class="price">USD 192,000</span><span class="permsq">2,341 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">74 m² cub</span><span class="badge">82 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2897168862-venta-departamento-3-ambientes-palermo-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-355202F70CC6C1ED" data-score="44.2" data-price="195000.0"
+  data-m2="82.0" data-barrio="Recoleta" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_809821-MLA120262891034_112026-E.webp" alt="" loading="lazy">
+    <span class="score low">44</span>
+    <button class="fav" data-fav-for="PROP-355202F70CC6C1ED" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2307570521-hermoso-departamento-tres-ambientes-en-recoleta-_JM" target="_blank" rel="noopener">Hermoso Departamento Tres Ambientes En Recoleta</a></h2>
+    <div class="price-row"><span class="price">USD 195,000</span><span class="permsq">2,378 USD/m²</span></div>
+    <div class="badges"><span class="badge">Recoleta</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">75 m² cub</span><span class="badge">82 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 2,096 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2307570521-hermoso-departamento-tres-ambientes-en-recoleta-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-B689D9755F930287" data-score="41.4" data-price="185000.0"
+  data-m2="80.0" data-barrio="Palermo" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_666987-MLA117444944986_102026-E.webp" alt="" loading="lazy">
+    <span class="score low">41</span>
+    <button class="fav" data-fav-for="PROP-B689D9755F930287" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-4050637204-venta-3-ambientes-palermo-cochera-reservada-_JM" target="_blank" rel="noopener">Venta- 3 Ambientes- Palermo- Cochera- Reservada</a></h2>
+    <div class="price-row"><span class="price">USD 185,000</span><span class="permsq">2,312 USD/m²</span></div>
+    <div class="badges"><span class="badge">Palermo</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">59 m² cub</span><span class="badge">80 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,977 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-4050637204-venta-3-ambientes-palermo-cochera-reservada-_JM">mercadolibre</a></p>
+  </div>
+</article><article class="card" data-key="PROP-6BF8A68EC46BC89A" data-score="30.8" data-price="200000.0"
+  data-m2="81.0" data-barrio="Saavedra" style="animation-delay:0.50s">
+  <div class="thumb"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_797100-MLA118558123967_102026-E.webp" alt="" loading="lazy">
+    <span class="score low">31</span>
+    <button class="fav" data-fav-for="PROP-6BF8A68EC46BC89A" aria-label="Marcar favorito" onclick="toggleFav(this)">&#9825;</button>
+  </div>
+  <div class="body">
+    <h2><a href="https://departamento.mercadolibre.com.ar/MLA-2143376123-departamento-en-saavedra-_JM" target="_blank" rel="noopener">Departamento En Saavedra</a></h2>
+    <div class="price-row"><span class="price">USD 200,000</span><span class="permsq">2,469 USD/m²</span></div>
+    <div class="badges"><span class="badge">Saavedra</span><span class="badge">3 amb</span><span class="badge">2 dorm</span><span class="badge">81 m² cub</span><span class="badge">81 m² total</span><span class="badge">1 cochera(s)</span></div>
+    <p class="median">Mediana de esta corrida en el barrio: 1,895 USD/m²</p>
+    <p class="sources">Fuentes: <a href="https://departamento.mercadolibre.com.ar/MLA-2143376123-departamento-en-saavedra-_JM">mercadolibre</a></p>
+  </div>
+</article></div>
+  <div class="near-toggle">
+  <button id="nearToggle" data-label="Ver también más cercanos (136)">Ver también más cercanos (136)</button>
+</div>
+<div id="nearSection" class="near-section">
+  <h3>Más cercanos por superficie</h3>
+  <p class="hint">No cumplen todos los mínimos; sirven para entender el mercado.</p>
+  <article class="near"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_961468-MLA114986924586_082026-E.webp" alt="">
+  <div><h4><a href="https://departamento.mercadolibre.com.ar/MLA-3809029802-depto-de-3-ambientes-c-dependencia-balcon-cochera-fija-baulera-a-metros-del-botanico-_JM" target="_blank" rel="noopener">Depto De 3 Ambientes C/ Dependencia, Balcón , Cochera Fija, Baulera A Metros Del Botánico!</a></h4>
+  <p>USD 195,000 · Palermo · 4 amb · 79 m² total</p>
+  <p class="reasons">No cumple: m2 totales insuficiente</p></div></article><article class="near"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_653115-MLA118981328233_102026-E.webp" alt="">
+  <div><h4><a href="https://departamento.mercadolibre.com.ar/MLA-3578437028-venta-departamento-3-amb-escritorio-balcon-belgrano-_JM" target="_blank" rel="noopener">Venta Departamento 3 Amb Escritorio Balcon Belgrano</a></h4>
+  <p>USD 189,000 · Belgrano · 3 amb · 79 m² total</p>
+  <p class="reasons">No cumple: m2 totales insuficiente</p></div></article><article class="near"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_783166-MLA120665649845_112026-E.webp" alt="">
+  <div><h4><a href="https://departamento.mercadolibre.com.ar/MLA-2255400879-departamento-3-ambientes-con-cochera-en-belgrano-_JM" target="_blank" rel="noopener">Departamento 3 Ambientes Con Cochera En Belgrano</a></h4>
+  <p>USD 135,000 · Belgrano · 3 amb · 79 m² total</p>
+  <p class="reasons">No cumple: m2 totales insuficiente</p></div></article><article class="near"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_771880-MLA121534985299_112026-E.webp" alt="">
+  <div><h4><a href="https://departamento.mercadolibre.com.ar/MLA-2282119865-venta-de-departamento-3-ambientes-mas-dependencia-con-balcon-cochera-y-baulera-palermo-botanico-_JM" target="_blank" rel="noopener">Venta De Departamento 3 Ambientes, Mas Dependencia Con Balcon, Cochera Y Baulera, Palermo Botanico.</a></h4>
+  <p>USD 192,000 · Palermo · 3 amb · 78.56 m² total</p>
+  <p class="reasons">No cumple: m2 totales insuficiente</p></div></article><article class="near"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_728596-MLA121534460437_112026-E.webp" alt="">
+  <div><h4><a href="https://departamento.mercadolibre.com.ar/MLA-2287689177-venta-de-departamento-3-ambientes-mas-dependencia-con-balcon-cochera-y-baulera-palermo-botanico-_JM" target="_blank" rel="noopener">Venta De Departamento 3 Ambientes, Mas Dependencia Con Balcon, Cochera Y Baulera, Palermo Botanico</a></h4>
+  <p>USD 192,100 · Palermo · 3 amb · 78.56 m² total</p>
+  <p class="reasons">No cumple: m2 totales insuficiente</p></div></article><article class="near"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_894180-MLA114389841908_082026-E.webp" alt="">
+  <div><h4><a href="https://departamento.mercadolibre.com.ar/MLA-1957298077-venta-departamento-4-ambientes-con-cochera-en-saavedra-_JM" target="_blank" rel="noopener">Venta Departamento 4 Ambientes Con Cochera En Saavedra</a></h4>
+  <p>USD 165,000 · Saavedra · 4 amb · 78 m² total</p>
+  <p class="reasons">No cumple: m2 totales insuficiente</p></div></article><article class="near"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_832688-MLA116052288560_092026-E.webp" alt="">
+  <div><h4><a href="https://departamento.mercadolibre.com.ar/MLA-2082992699-venta-departamento-4-ambientes-con-cochera-y-baulera-recoleta-barrio-norte-_JM" target="_blank" rel="noopener">Venta Departamento 4 Ambientes Con Cochera Y Baulera Recoleta - Barrio Norte</a></h4>
+  <p>USD 179,500 · Recoleta · 4 amb · 78 m² total</p>
+  <p class="reasons">No cumple: m2 totales insuficiente</p></div></article><article class="near"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_680922-MLA121312018703_112026-E.webp" alt="">
+  <div><h4><a href="https://departamento.mercadolibre.com.ar/MLA-4173291250-departamento-4-ambientes-recoleta-cochera-baulera-_JM" target="_blank" rel="noopener">Departamento 4 Ambientes Recoleta Cochera Baulera</a></h4>
+  <p>USD 180,000 · Recoleta · 4 amb · 78 m² total</p>
+  <p class="reasons">No cumple: m2 totales insuficiente</p></div></article><article class="near"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_981543-MLA117155657878_102026-E.webp" alt="">
+  <div><h4><a href="https://departamento.mercadolibre.com.ar/MLA-1948695119-departamento-4-ambientes-con-balcon-corrido-y-cochera-en-palermo-soho-_JM" target="_blank" rel="noopener">Departamento 4 Ambientes Con Balcón Corrido Y Cochera En Palermo Soho</a></h4>
+  <p>USD 194,000 · Palermo Soho · 4 amb · 78 m² total</p>
+  <p class="reasons">No cumple: m2 totales insuficiente</p></div></article><article class="near"><img src="https://http2.mlstatic.com/D_NQ_NP_2X_854354-MLA118453457968_102026-E.webp" alt="">
+  <div><h4><a href="https://departamento.mercadolibre.com.ar/MLA-4120905648-depto-3-ambientes-en-palermo-_JM" target="_blank" rel="noopener">Depto 3 Ambientes En Palermo</a></h4>
+  <p>USD 169,000 · Palermo · 3 amb · 77 m² total</p>
+  <p class="reasons">No cumple: m2 totales insuficiente</p></div></article>
+</div>
+  <footer>
+    El HTML y los precios publicados por los vendedores pueden cambiar o tener errores.
+    Verificá precio, superficie y cochera en el aviso original antes de decidir. Generado el 24/11/2026 10:30.
+  </footer>
+</div>
+<script>
+(function(){
+  var FAV_KEY = "depto-favoritos";
+  function favs(){ try { return JSON.parse(localStorage.getItem(FAV_KEY) || "[]"); } catch(e){ return []; } }
+  function saveFavs(list){ try { localStorage.setItem(FAV_KEY, JSON.stringify(list)); } catch(e){} }
+  window.toggleFav = function(btn){
+    var key = btn.getAttribute("data-fav-for");
+    var list = favs();
+    var i = list.indexOf(key);
+    if (i === -1) { list.push(key); btn.classList.add("on"); btn.innerHTML = "&#9829;"; }
+    else { list.splice(i, 1); btn.classList.remove("on"); btn.innerHTML = "&#9825;"; }
+    saveFavs(list);
+    applyFilters();
+  };
+  function paintFavs(){
+    var list = favs();
+    document.querySelectorAll(".fav").forEach(function(btn){
+      var on = list.indexOf(btn.getAttribute("data-fav-for")) !== -1;
+      btn.classList.toggle("on", on);
+      btn.innerHTML = on ? "&#9829;" : "&#9825;";
+    });
+  }
+  function cards(){ return Array.prototype.slice.call(document.querySelectorAll("#grid .card")); }
+  function applySort(){
+    var mode = document.getElementById("sortSelect").value;
+    var grid = document.getElementById("grid");
+    var list = cards();
+    list.sort(function(a, b){
+      if (mode === "price-asc") return a.dataset.price - b.dataset.price;
+      if (mode === "price-desc") return b.dataset.price - a.dataset.price;
+      if (mode === "m2-desc") return b.dataset.m2 - a.dataset.m2;
+      return b.dataset.score - a.dataset.score;
+    });
+    list.forEach(function(el){ grid.appendChild(el); });
+  }
+  function applyFilters(){
+    var barrio = document.getElementById("barrioSelect").value;
+    var onlyFav = document.getElementById("favToggle").classList.contains("active");
+    var list = favs();
+    var visible = 0;
+    cards().forEach(function(card){
+      var matchesBarrio = barrio === "" || card.dataset.barrio === barrio;
+      var matchesFav = !onlyFav || list.indexOf(card.dataset.key) !== -1;
+      var show = matchesBarrio && matchesFav;
+      card.hidden = !show;
+      if (show) visible++;
+    });
+    document.getElementById("visibleCount").textContent = visible;
+  }
+  document.getElementById("sortSelect").addEventListener("change", applySort);
+  document.getElementById("barrioSelect").addEventListener("change", applyFilters);
+  document.getElementById("favToggle").addEventListener("click", function(){
+    this.classList.toggle("active");
+    applyFilters();
+  });
+  var nearBtn = document.getElementById("nearToggle");
+  if (nearBtn) {
+    nearBtn.addEventListener("click", function(){
+      var section = document.getElementById("nearSection");
+      var open = section.classList.toggle("open");
+      this.textContent = open ? "Ocultar más cercanos" : this.dataset.label;
+    });
+  }
+  paintFavs();
+  applySort();
+  applyFilters();
+})();
+</script>
+</body>
+</html>
