@@ -20,6 +20,7 @@ max_price_usd = 200000
 min_rooms = 3
 min_total_m2 = 80
 min_parking = 1
+min_bathrooms = 2
 neighborhoods = [
   "Palermo", "Palermo Hollywood", "Palermo Soho", "Las Canitas",
   "Belgrano", "Belgrano R", "Nunez", "Saavedra", "Colegiales", "Recoleta"

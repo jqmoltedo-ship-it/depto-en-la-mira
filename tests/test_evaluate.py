@@ -10,7 +10,7 @@ from real_estate_scraper.normalize import from_api, number
 from real_estate_scraper.storage import add_previous_prices, save
 
 
-REQ = Requirements(20000, 200000, 3, 80, 1, ("Palermo", "Belgrano", "Nunez", "Saavedra", "Colegiales"))
+REQ = Requirements(20000, 200000, 3, 80, 1, 2, ("Palermo", "Belgrano", "Nunez", "Saavedra", "Colegiales"))
 
 
 class EvaluationTests(unittest.TestCase):
@@ -33,6 +33,15 @@ class EvaluationTests(unittest.TestCase):
         item = evaluate(from_api(raw), REQ, [], [])
         self.assertEqual(item.status, "rejected")
         self.assertIn("m2 totales insuficiente", item.reasons)
+
+    def test_insufficient_bathrooms_rejected(self):
+        raw = {**DEMO_ITEMS[0], "attributes": [
+            a if a["id"] != "FULL_BATHROOMS" else {"id": "FULL_BATHROOMS", "value_name": "1"}
+            for a in DEMO_ITEMS[0]["attributes"]
+        ]}
+        item = evaluate(from_api(raw), REQ, [], [])
+        self.assertEqual(item.status, "rejected")
+        self.assertIn("baños insuficiente", item.reasons)
 
     def test_missing_parking_requires_review(self):
         raw = {**DEMO_ITEMS[0], "attributes": [a for a in DEMO_ITEMS[0]["attributes"] if a["id"] != "PARKING_LOTS"]}

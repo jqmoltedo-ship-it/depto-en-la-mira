@@ -16,6 +16,7 @@ class Requirements:
     min_rooms: int
     min_total_m2: float
     min_parking: int
+    min_bathrooms: int
     neighborhoods: tuple[str, ...]
 
 

@@ -10,6 +10,7 @@ from .models import Listing
 ATTRIBUTE_MAP = {
     "ROOMS": "rooms",
     "BEDROOMS": "bedrooms",
+    "FULL_BATHROOMS": "bathrooms",
     "COVERED_AREA": "covered_m2",
     "TOTAL_AREA": "total_m2",
     "PARKING_LOTS": "parking",
@@ -71,6 +72,7 @@ def from_browser_record(record: dict, source: str) -> Listing:
         longitude=number(record.get("longitude")),
         rooms=number(record.get("rooms")),
         bedrooms=number(record.get("bedrooms")),
+        bathrooms=number(record.get("bathrooms")),
         covered_m2=number(record.get("covered_m2")),
         total_m2=number(record.get("total_m2")),
         parking=number(record.get("parking")),

@@ -19,6 +19,7 @@ class Listing:
     longitude: float | None = None
     rooms: float | None = None
     bedrooms: float | None = None
+    bathrooms: float | None = None
     covered_m2: float | None = None
     total_m2: float | None = None
     parking: float | None = None

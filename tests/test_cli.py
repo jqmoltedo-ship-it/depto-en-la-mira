@@ -24,7 +24,7 @@ class CliTests(unittest.TestCase):
                 "request_delay_seconds": 0,
             },
             "browser": {"export_file": "data/browser_sources.json", "max_age_hours": 30},
-            "requirements": Requirements(20000, 200000, 3, 80, 1, ("Belgrano",)),
+            "requirements": Requirements(20000, 200000, 3, 80, 1, 2, ("Belgrano",)),
             "preferences": {"corridor_terms": [], "renovation_terms": []},
             "output": {"directory": "data"},
         }
@@ -61,7 +61,7 @@ class CliTests(unittest.TestCase):
                 "request_delay_seconds": 0,
             },
             "browser": {"export_file": "data/browser_sources.json", "max_age_hours": 30},
-            "requirements": Requirements(20000, 200000, 3, 80, 1, ("Belgrano",)),
+            "requirements": Requirements(20000, 200000, 3, 80, 1, 2, ("Belgrano",)),
             "preferences": {"corridor_terms": [], "renovation_terms": []},
             "output": {"directory": "data"},
         }
@@ -70,7 +70,7 @@ class CliTests(unittest.TestCase):
         scraper_class.return_value = scraper
         browser_listing = Listing(
             "M1", "Depto", "https://m/1", 140000, "USD", "Belgrano", source="mercadolibre",
-            rooms=3, bedrooms=2, covered_m2=90, total_m2=95, parking=1,
+            rooms=3, bedrooms=2, bathrooms=2, covered_m2=90, total_m2=95, parking=1,
         )
         load_browser_export.return_value = ([browser_listing], [])
         write_reports.return_value = (Path("report.html"), Path("matches.csv"), Path("snapshot.csv"))

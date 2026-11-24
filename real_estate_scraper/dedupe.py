@@ -95,7 +95,7 @@ def _merge(group: list[Listing]) -> Listing:
     usd = [item for item in group if item.currency == "USD" and item.price > 0]
     representative = min(usd or group, key=lambda item: item.price or float("inf"))
     merged = deepcopy(representative)
-    for field in ("neighborhood", "address", "latitude", "longitude", "rooms", "bedrooms", "covered_m2", "total_m2", "parking", "description", "thumbnail"):
+    for field in ("neighborhood", "address", "latitude", "longitude", "rooms", "bedrooms", "bathrooms", "covered_m2", "total_m2", "parking", "description", "thumbnail"):
         value = _best_value(group, field)
         if value not in (None, ""):
             setattr(merged, field, value)

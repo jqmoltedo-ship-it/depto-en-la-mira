@@ -159,6 +159,7 @@ def apply_detail(listing: Listing, html: str) -> Listing:
     mapping = {
         "superficie total": "total_m2", "superficie cubierta": "covered_m2",
         "ambientes": "rooms", "dormitorios": "bedrooms", "cocheras": "parking",
+        "banos": "bathrooms",
     }
     for label, field in mapping.items():
         if label in values:

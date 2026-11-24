@@ -11,6 +11,7 @@ y genera un reporte ordenado por oportunidad.
 - 3 ambientes como minimo.
 - 80 m2 totales como minimo.
 - Una cochera como minimo.
+- 2 baños como minimo.
 - Dormitorios y m2 cubiertos no son excluyentes: se muestran si el portal los informa, pero no filtran.
 - Antiguedad y expensas no excluyen.
 - Se favorecen ubicaciones cercanas a Libertador, Santa Fe, Cabildo y el corredor norte.

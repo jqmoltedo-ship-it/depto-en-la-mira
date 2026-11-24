@@ -101,6 +101,7 @@ def _card_html(x: Listing, index: int) -> str:
         f'<a href="{escape(url)}">{escape(source)}</a>' for source, url in sorted(x.source_urls.items())
     )
     bedrooms = f'<span class="badge">{x.bedrooms:g} dorm</span>' if x.bedrooms is not None else ""
+    bathrooms = f'<span class="badge">{x.bathrooms:g} baño(s)</span>' if x.bathrooms is not None else ""
     covered = f'<span class="badge">{x.covered_m2:g} m² cub</span>' if x.covered_m2 is not None else ""
     median = (
         f'<p class="median">Mediana de esta corrida en el barrio: {x.neighborhood_median:,.0f} USD/m²</p>'
@@ -117,7 +118,7 @@ def _card_html(x: Listing, index: int) -> str:
   <div class="body">
     <h2><a href="{escape(x.url)}" target="_blank" rel="noopener">{escape(x.title)}</a></h2>
     <div class="price-row"><span class="price">USD {x.price:,.0f}</span><span class="permsq">{x.usd_per_m2:,.0f} USD/m²</span></div>
-    <div class="badges"><span class="badge">{escape(x.neighborhood)}</span><span class="badge">{x.rooms:g} amb</span>{bedrooms}{covered}<span class="badge">{x.total_m2:g} m² total</span><span class="badge">{x.parking:g} cochera(s)</span></div>
+    <div class="badges"><span class="badge">{escape(x.neighborhood)}</span><span class="badge">{x.rooms:g} amb</span>{bedrooms}{bathrooms}{covered}<span class="badge">{x.total_m2:g} m² total</span><span class="badge">{x.parking:g} cochera(s)</span></div>
     {median}
     <p class="sources">Fuentes: {sources}</p>
   </div>
@@ -251,9 +252,9 @@ def write_reports(directory: Path, listings: list[Listing]) -> tuple[Path, Path,
     csv_path = directory / "matches.csv"
     with csv_path.open("w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
-        writer.writerow(["score", "precio_usd", "usd_m2", "barrio", "ambientes", "dormitorios", "cubiertos_m2", "total_m2", "cocheras", "titulo", "url", "fuentes", "property_key"])
+        writer.writerow(["score", "precio_usd", "usd_m2", "barrio", "ambientes", "dormitorios", "banos", "cubiertos_m2", "total_m2", "cocheras", "titulo", "url", "fuentes", "property_key"])
         for x in matches:
-            writer.writerow([x.opportunity_score, x.price, round(x.usd_per_m2 or 0), x.neighborhood, x.rooms, x.bedrooms, x.covered_m2, x.total_m2, x.parking, x.title, x.url, ", ".join(sorted(x.source_ids)), x.property_key])
+            writer.writerow([x.opportunity_score, x.price, round(x.usd_per_m2 or 0), x.neighborhood, x.rooms, x.bedrooms, x.bathrooms, x.covered_m2, x.total_m2, x.parking, x.title, x.url, ", ".join(sorted(x.source_ids)), x.property_key])
     snapshot_path = directory / "snapshot.csv"
     observed_at = datetime.now().astimezone().replace(microsecond=0)
     with snapshot_path.open("w", newline="", encoding="utf-8") as file:
@@ -261,7 +262,7 @@ def write_reports(directory: Path, listings: list[Listing]) -> tuple[Path, Path,
         writer.writerow([
             "observado_el", "item_id", "estado", "puntaje", "precio_usd",
             "precio_anterior_usd", "cambio_precio_usd", "cambio_precio_pct",
-            "usd_m2", "barrio", "direccion", "ambientes", "dormitorios",
+            "usd_m2", "barrio", "direccion", "ambientes", "dormitorios", "banos",
             "cubiertos_m2", "total_m2", "cocheras", "titulo", "url", "motivos",
             "fuente", "property_key", "fuentes", "enlaces_fuentes", "duplicados",
         ])
@@ -274,6 +275,7 @@ def write_reports(directory: Path, listings: list[Listing]) -> tuple[Path, Path,
                 x.usd_per_m2 if x.usd_per_m2 is not None else "",
                 x.neighborhood, x.address, x.rooms if x.rooms is not None else "",
                 x.bedrooms if x.bedrooms is not None else "",
+                x.bathrooms if x.bathrooms is not None else "",
                 x.covered_m2 if x.covered_m2 is not None else "",
                 x.total_m2 if x.total_m2 is not None else "",
                 x.parking if x.parking is not None else "", x.title, x.url,
@@ -331,11 +333,12 @@ def write_reports(directory: Path, listings: list[Listing]) -> tuple[Path, Path,
 <div class="hero">
   <div class="eyebrow">Capital Federal · actualizado cada 2 días</div>
   <h1>Depto en la mira</h1>
-  <p class="sub">Búsqueda automática de 3+ ambientes, 80+ m² totales y cochera, hasta USD 200.000.</p>
+  <p class="sub">Búsqueda automática de 3+ ambientes, 80+ m² totales, 2+ baños y cochera, hasta USD 200.000.</p>
   <div class="chips">
     <span class="chip">Hasta USD 200.000</span>
     <span class="chip">3+ ambientes</span>
     <span class="chip">80+ m² totales</span>
+    <span class="chip">2+ baños</span>
     <span class="chip">1+ cochera</span>
     <span class="chip">Palermo · Belgrano · Núñez · Recoleta y alrededores</span>
   </div>

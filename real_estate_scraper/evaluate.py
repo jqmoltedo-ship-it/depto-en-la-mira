@@ -20,6 +20,7 @@ def evaluate(listing: Listing, req: Requirements, corridor_terms: list[str], ren
         ("ambientes", listing.rooms, req.min_rooms),
         ("m2 totales", listing.total_m2, req.min_total_m2),
         ("cocheras", listing.parking, req.min_parking),
+        ("baños", listing.bathrooms, req.min_bathrooms),
     ]
     missing = [name for name, value, _ in required if value is None]
     insufficient = [name for name, value, minimum in required if value is not None and value < minimum]
