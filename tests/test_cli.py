@@ -24,7 +24,7 @@ class CliTests(unittest.TestCase):
                 "request_delay_seconds": 0,
             },
             "browser": {"export_file": "data/browser_sources.json", "max_age_hours": 30},
-            "requirements": Requirements(1, 200000, 3, 80, 1, ("Belgrano",)),
+            "requirements": Requirements(20000, 200000, 3, 80, 1, ("Belgrano",)),
             "preferences": {"corridor_terms": [], "renovation_terms": []},
             "output": {"directory": "data"},
         }
@@ -61,7 +61,7 @@ class CliTests(unittest.TestCase):
                 "request_delay_seconds": 0,
             },
             "browser": {"export_file": "data/browser_sources.json", "max_age_hours": 30},
-            "requirements": Requirements(1, 200000, 3, 80, 1, ("Belgrano",)),
+            "requirements": Requirements(20000, 200000, 3, 80, 1, ("Belgrano",)),
             "preferences": {"corridor_terms": [], "renovation_terms": []},
             "output": {"directory": "data"},
         }

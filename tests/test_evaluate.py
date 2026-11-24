@@ -10,7 +10,7 @@ from real_estate_scraper.normalize import from_api, number
 from real_estate_scraper.storage import add_previous_prices, save
 
 
-REQ = Requirements(1, 200000, 3, 80, 1, ("Palermo", "Belgrano", "Nunez", "Saavedra", "Colegiales"))
+REQ = Requirements(20000, 200000, 3, 80, 1, ("Palermo", "Belgrano", "Nunez", "Saavedra", "Colegiales"))
 
 
 class EvaluationTests(unittest.TestCase):

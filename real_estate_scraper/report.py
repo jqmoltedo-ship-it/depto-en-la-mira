@@ -290,7 +290,7 @@ def write_reports(directory: Path, listings: list[Listing]) -> tuple[Path, Path,
         f'<option value="{escape(n, quote=True)}">{escape(n)}</option>' for n in neighborhoods
     )
 
-    near = [x for x in listings if x.status == "rejected" and x.currency == "USD" and 1 <= x.price <= 200000]
+    near = [x for x in listings if x.status == "rejected" and x.currency == "USD" and 20000 <= x.price <= 200000]
     near.sort(key=lambda x: (x.total_m2 or 0, x.covered_m2 or 0), reverse=True)
     near_cards_html = "".join(_near_card_html(x) for x in near[:10])
 

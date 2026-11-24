@@ -1,5 +1,5 @@
 [search]
-url = "https://inmuebles.mercadolibre.com.ar/departamentos/venta/mas-de-3-ambientes/capital-federal/belgrano-o-belgrano-r-o-colegiales-o-las-canitas-o-nunez-o-palermo-o-palermo-hollywood-o-palermo-soho-o-recoleta-o-saavedra/_PriceRange_1USD-200000USD_ITEM*CONDITION_2230581_Cocheras_1"
+url = "https://inmuebles.mercadolibre.com.ar/departamentos/venta/mas-de-3-ambientes/capital-federal/belgrano-o-belgrano-r-o-colegiales-o-las-canitas-o-nunez-o-palermo-o-palermo-hollywood-o-palermo-soho-o-recoleta-o-saavedra/_PriceRange_20000USD-200000USD_ITEM*CONDITION_2230581_Cocheras_1"
 max_pages = 10
 page_size = 48
 request_delay_seconds = 1
@@ -9,13 +9,13 @@ export_file = "data/browser_sources.json"
 max_age_hours = 30
 
 [zonaprop]
-url = "https://www.zonaprop.com.ar/departamentos-venta-belgrano-palermo-recoleta-nunez-saavedra-colegiales-mas-de-1-garage-mas-80-m2-200000-dolar.html"
+url = "https://www.zonaprop.com.ar/departamentos-venta-belgrano-palermo-recoleta-nunez-saavedra-colegiales-mas-de-1-garage-mas-80-m2-20000-200000-dolar.html"
 
 [argenprop]
 url = "https://www.argenprop.com/departamentos/venta/belgrano-o-colegiales-o-nunez-o-palermo-o-recoleta-o-saavedra/3-ambientes-o-4-ambientes-o-5-o-mas-ambientes/hasta-200000-dolares?1-o-mas-cocheras&desde-80-m2"
 
 [requirements]
-min_price_usd = 1
+min_price_usd = 20000
 max_price_usd = 200000
 min_rooms = 3
 min_total_m2 = 80

@@ -6,7 +6,7 @@ y genera un reporte ordenado por oportunidad.
 
 ## Criterios actuales
 
-- Hasta USD 200.000.
+- USD 20.000 a USD 200.000 (el piso es solo para descartar publicaciones con precio mal cargado, por ejemplo emprendimientos sin precio por unidad).
 - Palermo y subzonas, Belgrano y Belgrano R, Nunez, Saavedra, Colegiales o Recoleta.
 - 3 ambientes como minimo.
 - 80 m2 totales como minimo.
@@ -87,10 +87,46 @@ launchctl bootout "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.local.departame
 rm "$HOME/Library/LaunchAgents/com.local.departamentos.plist"
 ```
 
-ZonaProp y Argenprop son fuentes opcionales: solo se incluyen si existe una
-exportacion reciente (menor a 30 horas) en `data/browser_sources.json`, generada a mano
-o con una automatizacion de navegador aparte. Sin esa exportacion, el job corre
-igual usando solo Mercado Libre.
+## ZonaProp (automatico) y Argenprop (manual)
+
+`run_and_publish.sh` corre `real_estate_scraper.browser_collect` antes del buscador
+principal si existe `.venv/` con Playwright instalado: abre ZonaProp con un Chromium
+headless, reusa los extractores de `scripts/browser_extract.mjs` (unica fuente de
+verdad, compartida con el flujo manual) y escribe `data/browser_sources.json`. Si
+Playwright no esta instalado o ZonaProp bloquea la visita, el paso se omite con un
+aviso y la corrida sigue solo con Mercado Libre.
+
+Instalacion unica:
+
+```bash
+python3 -m venv .venv
+.venv/bin/python3 -m pip install -r requirements-browser.txt
+.venv/bin/python3 -m playwright install chromium
+```
+
+Argenprop queda afuera de la automatizacion a proposito: le muestra una pagina
+"confirma que sos humano" a navegadores automatizados, y este proyecto no intenta
+sortear verificaciones anti-bot. Para sumarlo igual, hay que hacerlo a mano: abrir la
+busqueda de `config.toml` en un navegador real, pegar `extractArgenprop()` (de
+`scripts/browser_extract.mjs`) en la consola y agregar el resultado a
+`data/browser_sources.json` bajo la clave `"argenprop"` (se toma si tiene menos de
+30 horas).
+
+## Shortlist manual (Instagram y otros)
+
+Para departamentos vistos fuera de los tres portales (tipicamente en reels o historias
+de Instagram), `shortlist.json` en la raiz del proyecto es una lista simple que se
+agrega a mano y se muestra en su propia seccion del reporte, sin pasar por los
+requisitos automaticos:
+
+```bash
+python3 scripts/add_shortlist.py --title "3 amb en Belgrano" \
+    --url "https://instagram.com/p/..." --price 185000 \
+    --neighborhood Belgrano --rooms 3 --total-m2 85 --parking 1 \
+    --notes "Visto en reel de @inmobiliariaXYZ"
+```
+
+Solo `--title` y `--url` son obligatorios. El archivo no se borra entre corridas.
 
 ## Como se calcula la oportunidad
 
